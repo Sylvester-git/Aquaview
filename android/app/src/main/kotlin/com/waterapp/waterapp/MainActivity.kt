@@ -1,0 +1,5 @@
+package com.waterapp.waterapp
+
+import io.flutter.embedding.android.FlutterActivity
+
+class MainActivity : FlutterActivity()
