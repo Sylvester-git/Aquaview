@@ -1,84 +1,64 @@
-import 'package:flutter/material.dart';
-import 'package:waterapp/features/widgets/water_quality_chart.dart';
+import 'dart:async';
 
-class DashboardPage extends StatelessWidget {
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:waterapp/features/controllers/api_ctrl.dart';
+import 'package:waterapp/features/cubit/get_prediction/get_prediction_cubit.dart';
+import 'package:waterapp/features/cubit/get_sensor_data/get_sensor_data_cubit.dart';
+import 'package:waterapp/features/dashboard/loaded_screen.dart';
+import 'package:waterapp/features/widgets/water_quality_chart.dart';
+import 'package:waterapp/util/color.dart';
+
+class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});
 
   @override
+  State<DashboardPage> createState() => _DashboardPageState();
+}
+
+class _DashboardPageState extends State<DashboardPage> {
+  Timer? timer;
+  @override
+  void initState() {
+    super.initState();
+    getWQMSData();
+    refreshWQMSData();
+  }
+
+  void getWQMSData() async {
+    await Future.wait([
+      ApiCtrl.getPrediction(context: context),
+      ApiCtrl.getSensorData(context: context),
+    ]);
+  }
+
+  void refreshWQMSData() {
+    timer = Timer.periodic(const Duration(minutes: 1), (timer) async {
+      await Future.wait([
+        ApiCtrl.refreshSensorData(context: context),
+        ApiCtrl.refreshePrediction(context: context),
+      ]);
+    });
+  }
+
+  @override
+  void dispose() {
+    timer?.cancel();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final getSensorDataCubit = context.watch<GetSensorDataCubit>();
+    final getPredictionCubit = context.watch<GetPredictionCubit>();
     return Scaffold(
       body: SafeArea(
-        child: SingleChildScrollView(
-          padding: EdgeInsets.symmetric(horizontal: 12),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Container(
-                decoration: BoxDecoration(border: Border.all()),
-                child: Row(
-                  spacing: 10,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [Icon(Icons.account_tree_sharp), Text('Dashboard')],
-                ),
-              ),
-              SizedBox(height: 30),
-              WaterQualityChart(
-                dates: [
-                  'Apr 16',
-                  'Apr 20',
-                  'Apr 24',
-                  'Apr 28',
-                  'May 2',
-                  'May 6',
-                  'May 10',
-                ],
-                values: [6.7, 7.4, 6.0, 12.3, 7.0, 7.5, 6.5],
-                parameterName: 'PH Level',
-                subText: 'Acidity / Alkalinity',
-                isHistogram: false,
-                parameterSI: '',
-              ),
-              WaterQualityChart(
-                dates: [
-                  'Apr 16',
-                  'Apr 20',
-                  'Apr 24',
-                  'Apr 28',
-                  'May 2',
-                  'May 6',
-                  'May 10',
-                ],
-                values: [
-                  100,
-                  200,
-                  50,
-                  75,
-                  350,
-                  125,
-                  50,
-                  65,
-                  39,
-                  40,
-                  50,
-                  30,
-                  50,
-                  100,
-                  40,
-                  50,
-                  20,
-                  94,
-                  29,
-                  30,
-                ], // Example TDS values
-                parameterName: 'TDS (Total Dissolved Solids)',
-                subText: 'Dissolved particles concentration',
-                isHistogram: true,
-                parameterSI: '',
-              ),
-            ],
-          ),
-        ),
+        child:
+            (getPredictionCubit.state is GettingPrediction ||
+                    getSensorDataCubit.state is GettingSensorData)
+                ? Center(child: CircularProgressIndicator.adaptive())
+                : LoadedDashBoard(),
       ),
     );
   }
