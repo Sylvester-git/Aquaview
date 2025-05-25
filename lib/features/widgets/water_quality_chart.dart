@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:waterapp/util/color.dart';
@@ -59,8 +58,22 @@ class WaterQualityChart extends StatelessWidget {
   }
 
   Widget _buildLineChart() {
-    final minY = (values.reduce((a, b) => a < b ? a : b) - 0.5).floorToDouble();
-    final maxY = (values.reduce((a, b) => a > b ? a : b) + 0.5).ceilToDouble();
+    final minValue = (values.reduce((a, b) => a < b ? a : b)).floorToDouble();
+    final maxValue = (values.reduce((a, b) => a > b ? a : b)).ceilToDouble();
+    final minY =
+        generateSteps(
+          minValue,
+          maxValue,
+          steps: 5,
+        ).reduce((a, b) => a < b ? a : b).toDouble() -
+        minValue;
+    final maxY =
+        generateSteps(
+          minValue,
+          maxValue,
+          steps: 5,
+        ).reduce((a, b) => a > b ? a : b).toDouble() +
+        minValue;
 
     return LineChart(
       LineChartData(
@@ -126,7 +139,7 @@ class WaterQualityChart extends StatelessWidget {
             getTooltipItems: (touchedSpots) {
               return touchedSpots.map((spot) {
                 return LineTooltipItem(
-                  '${spot.y.toStringAsFixed(1)} PH Level',
+                  '${spot.y.toStringAsFixed(1)} $parameterName',
                   const TextStyle(color: Colors.white),
                 );
               }).toList();
@@ -157,7 +170,7 @@ class WaterQualityChart extends StatelessWidget {
           steps: 5,
         ).reduce((a, b) => a > b ? a : b).toDouble() +
         minValue;
-    final stepValues = generateSteps(minValue, maxValue, steps: 5);
+    // final stepValues = generateSteps(minValue, maxValue, steps: 5);
     return BarChart(
       BarChartData(
         gridData: const FlGridData(show: false),

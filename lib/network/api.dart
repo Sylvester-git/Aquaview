@@ -8,7 +8,7 @@ class Api {
   late Dio dio;
   Future<Dio> getDio() async {
     Dio dio = Dio();
-    int timeout = 90;
+    int timeout = 120;
     Map<String, dynamic> headers = {
       "Accept": "application/json",
       "Content-Type": "application/json",
