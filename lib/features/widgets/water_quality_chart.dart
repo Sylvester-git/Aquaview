@@ -1,6 +1,8 @@
+
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:waterapp/util/color.dart';
+import 'package:waterapp/util/functions.dart';
 
 class WaterQualityChart extends StatelessWidget {
   const WaterQualityChart({
@@ -104,6 +106,7 @@ class WaterQualityChart extends StatelessWidget {
         minX: 0,
         maxX: (dates.length - 1).toDouble(),
         minY: minY,
+
         maxY: maxY,
         lineBarsData: [
           LineChartBarData(
@@ -111,8 +114,9 @@ class WaterQualityChart extends StatelessWidget {
               values.length,
               (index) => FlSpot(index.toDouble(), values[index]),
             ),
-            isCurved: false,
+            isCurved: true,
             color: const Color(0xFF4ECDC4),
+
             dotData: const FlDotData(show: true),
             belowBarData: BarAreaData(show: false),
           ),
@@ -135,19 +139,30 @@ class WaterQualityChart extends StatelessWidget {
 
   Widget _buildHistogram() {
     // Group values into bins for histogram
-    const binSize = 50.0; // Adjust bin size as needed
-    final maxValue = values.reduce((a, b) => a > b ? a : b);
-    final bins = List<int>.filled((maxValue / binSize).ceil(), 0);
-    for (var value in values) {
-      final binIndex = (value / binSize).floor();
-      if (binIndex < bins.length) bins[binIndex]++;
-    }
+    // const binSize = 60.0; // Adjust bin size as needed
 
+    final minValue = (values.reduce((a, b) => a < b ? a : b)).floorToDouble();
+    final maxValue = (values.reduce((a, b) => a > b ? a : b)).ceilToDouble();
+    final minY =
+        generateSteps(
+          minValue,
+          maxValue,
+          steps: 5,
+        ).reduce((a, b) => a < b ? a : b).toDouble() -
+        minValue;
+    final maxY =
+        generateSteps(
+          minValue,
+          maxValue,
+          steps: 5,
+        ).reduce((a, b) => a > b ? a : b).toDouble() +
+        minValue;
+    final stepValues = generateSteps(minValue, maxValue, steps: 5);
     return BarChart(
       BarChartData(
         gridData: const FlGridData(show: false),
         titlesData: FlTitlesData(
-          leftTitles: const AxisTitles(
+          rightTitles: const AxisTitles(
             sideTitles: SideTitles(showTitles: false),
           ),
           bottomTitles: AxisTitles(
@@ -161,7 +176,7 @@ class WaterQualityChart extends StatelessWidget {
                   padding: const EdgeInsets.only(top: 8.0),
                   child: Text(
                     dates[value.toInt()],
-                    style: const TextStyle(color: Colors.white70, fontSize: 12),
+                    style: const TextStyle(color: Colors.white70, fontSize: 11),
                   ),
                 );
               },
@@ -170,13 +185,17 @@ class WaterQualityChart extends StatelessWidget {
           topTitles: const AxisTitles(
             sideTitles: SideTitles(showTitles: false),
           ),
-          rightTitles: AxisTitles(
+
+          leftTitles: AxisTitles(
             sideTitles: SideTitles(
               showTitles: true,
               reservedSize: 40,
               getTitlesWidget: (value, meta) {
+                // if (value.toInt() >= dates.length) {
+                //   return SizedBox.shrink();
+                // }
                 return Text(
-                  'ppm',
+                  'va',
                   style: const TextStyle(color: Colors.white70, fontSize: 12),
                 );
               },
@@ -184,15 +203,16 @@ class WaterQualityChart extends StatelessWidget {
           ),
         ),
         borderData: FlBorderData(show: false),
-        minY: 0,
-        barGroups: List.generate(bins.length, (index) {
+        minY: minY,
+        maxY: maxY,
+        barGroups: List.generate(values.length, (index) {
           return BarChartGroupData(
             x: index,
             barRods: [
               BarChartRodData(
-                toY: bins[index].toDouble(),
+                toY: values[index].toDouble(),
                 color: const Color(0xFF4ECDC4),
-                width: 8,
+                width: 12,
                 borderRadius: BorderRadius.zero,
               ),
             ],

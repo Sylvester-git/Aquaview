@@ -15,7 +15,11 @@ dependencies:
   bloc: ^9.0.0
   flutter_bloc: ^9.1.1
   fl_chart:
+  equatable: 
+  dartz: 
   go_router: 
+  pretty_dio_logger: 
+  dio: 
   get_it: 
 
 dev_dependencies:

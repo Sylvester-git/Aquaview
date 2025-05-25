@@ -7,62 +7,78 @@ class DashboardPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Container(
-            decoration: BoxDecoration(border: Border.all()),
-            child: Row(
-              spacing: 10,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [Icon(Icons.account_tree_sharp), Text('Dashboard')],
-            ),
-          ),
-          WaterQualityChart(
-            dates: [
-              'Apr 16',
-              'Apr 20',
-              'Apr 24',
-              'Apr 28',
-              'May 2',
-              'May 6',
-              'May 10',
-              'May 15',
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: EdgeInsets.symmetric(horizontal: 12),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Container(
+                decoration: BoxDecoration(border: Border.all()),
+                child: Row(
+                  spacing: 10,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [Icon(Icons.account_tree_sharp), Text('Dashboard')],
+                ),
+              ),
+              SizedBox(height: 30),
+              WaterQualityChart(
+                dates: [
+                  'Apr 16',
+                  'Apr 20',
+                  'Apr 24',
+                  'Apr 28',
+                  'May 2',
+                  'May 6',
+                  'May 10',
+                ],
+                values: [6.7, 7.4, 6.0, 12.3, 7.0, 7.5, 6.5],
+                parameterName: 'PH Level',
+                subText: 'Acidity / Alkalinity',
+                isHistogram: false,
+                parameterSI: '',
+              ),
+              WaterQualityChart(
+                dates: [
+                  'Apr 16',
+                  'Apr 20',
+                  'Apr 24',
+                  'Apr 28',
+                  'May 2',
+                  'May 6',
+                  'May 10',
+                ],
+                values: [
+                  100,
+                  200,
+                  50,
+                  75,
+                  350,
+                  125,
+                  50,
+                  65,
+                  39,
+                  40,
+                  50,
+                  30,
+                  50,
+                  100,
+                  40,
+                  50,
+                  20,
+                  94,
+                  29,
+                  30,
+                ], // Example TDS values
+                parameterName: 'TDS (Total Dissolved Solids)',
+                subText: 'Dissolved particles concentration',
+                isHistogram: true,
+                parameterSI: '',
+              ),
             ],
-            values: [7.7, 7.4, 7.8, 7.2, 7.6, 7.3, 7.5, 7.1],
-            parameterName: 'PH Level',
-            subText: 'Acidity / Alkalinity',
-            isHistogram: false,
-            parameterSI: '',
           ),
-          WaterQualityChart(
-            dates: [
-              'Apr 16',
-              'Apr 20',
-              'Apr 24',
-              'Apr 28',
-              'May 2',
-              'May 6',
-              'May 10',
-              'May 15',
-            ],
-            values: [
-              50,
-              100,
-              150,
-              200,
-              250,
-              300,
-              350,
-              400,
-            ], // Example TDS values
-            parameterName: 'TDS (Total Dissolved Solids)',
-            subText: 'Dissolved particles concentration',
-            isHistogram: true,
-            parameterSI: '',
-          ),
-        ],
+        ),
       ),
     );
   }
