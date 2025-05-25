@@ -8,29 +8,66 @@ import 'package:waterapp/util/color.dart';
 import 'package:waterapp/util/functions.dart';
 
 class LoadedDashBoard extends StatelessWidget {
-  const LoadedDashBoard({super.key});
+  const LoadedDashBoard({super.key, required this.scaffoldKey});
+
+  final GlobalKey<ScaffoldState> scaffoldKey;
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         Container(
-          color: AppColor.phcolor,
+          color: AppColor.onprimarydark,
+          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                'Dashboard',
-                style: GoogleFonts.sora(
-                  fontSize: 24,
-                  color: Colors.white,
-                  fontWeight: FontWeight.w600,
-                ),
+              Row(
+                spacing: 10,
+                children: [
+                  InkWell(
+                    onTap: () {
+                      scaffoldKey.currentState!.openDrawer();
+                    },
+                    child: Icon(Icons.menu, color: Colors.white),
+                  ),
+                  Text(
+                    'Dashboard',
+                    style: GoogleFonts.sora(
+                      fontSize: 24,
+                      color: Colors.white,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
               ),
 
               BlocBuilder<GetPredictionCubit, GetPredictionState>(
                 builder: (context, getPredictionstate) {
-                  return Container(decoration: BoxDecoration());
+                  return Container(
+                    padding: EdgeInsets.all(6),
+
+                    decoration: BoxDecoration(
+                      color:
+                          (getPredictionstate as GottenPrediction)
+                                      .prediction
+                                      .status
+                                      .toLowerCase() ==
+                                  'unsafe'
+                              ? AppColor.red.withOpacity(.8)
+                              : AppColor.green.withOpacity(.8),
+                      borderRadius: BorderRadius.all(Radius.circular(100)),
+                    ),
+                    child: Center(
+                      child: Text(
+                        (getPredictionstate.prediction.status),
+                        style: GoogleFonts.sora(
+                          fontSize: 12,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  );
                 },
               ),
             ],
@@ -55,6 +92,7 @@ class LoadedDashBoard extends StatelessWidget {
                     WaterQualityChart(
                       dates: dates,
                       isPH: true,
+                      linecolor: AppColor.phcolor,
                       values: value.map((data) => data.pH).take(6).toList(),
                       parameterName: 'PH Level',
                       subText: 'Acidity / Alkalinity',
@@ -64,6 +102,7 @@ class LoadedDashBoard extends StatelessWidget {
                     //! TDS
                     WaterQualityChart(
                       dates: dates,
+                      linecolor: AppColor.tdscolor,
                       values:
                           value
                               .map((data) => data.tds)
@@ -77,6 +116,7 @@ class LoadedDashBoard extends StatelessWidget {
                     //! TURBIDITY
                     WaterQualityChart(
                       dates: dates,
+                      linecolor: AppColor.turbiditycolor,
                       values:
                           value
                               .map((data) => data.tub)
@@ -90,6 +130,7 @@ class LoadedDashBoard extends StatelessWidget {
                     //! TEMPERATURE
                     WaterQualityChart(
                       dates: dates,
+                      linecolor: AppColor.temperaturecolor,
                       values:
                           value
                               .map((data) => data.temp)

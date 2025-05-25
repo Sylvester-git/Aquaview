@@ -13,6 +13,7 @@ class WaterQualityChart extends StatelessWidget {
     required this.parameterName,
     required this.subText,
     this.isPH = false,
+    required this.linecolor,
     required this.isHistogram,
     required this.parameterSI,
   });
@@ -21,6 +22,7 @@ class WaterQualityChart extends StatelessWidget {
   final List<double> values;
   final String parameterName;
   final bool isPH;
+  final Color linecolor;
   final String subText;
   final bool isHistogram;
   final String parameterSI;
@@ -140,7 +142,7 @@ class WaterQualityChart extends StatelessWidget {
             isCurved: true,
             barWidth: 1.5,
 
-            color: const Color(0xFF4ECDC4),
+            color: linecolor,
             dotData: const FlDotData(show: true),
             belowBarData: BarAreaData(show: false),
           ),
@@ -162,29 +164,24 @@ class WaterQualityChart extends StatelessWidget {
   }
 
   Widget _buildHistogram() {
-    // Group values into bins for histogram
-    // const binSize = 60.0; // Adjust bin size as needed
-
     final minValue = (values.reduce((a, b) => a < b ? a : b)).floorToDouble();
     final maxValue = (values.reduce((a, b) => a > b ? a : b)).ceilToDouble();
-    final minY =
-        generateSteps(
-          minValue,
-          maxValue,
-          steps: 5,
-        ).reduce((a, b) => a < b ? a : b).toDouble() -
-        minValue;
+    // final minY =
+    //     generateSteps(
+    //       minValue,
+    //       maxValue,
+    //       steps: 5,
+    //     ).reduce((a, b) => a < b ? a : b).toDouble();
     final maxY =
         generateSteps(
           minValue,
           maxValue,
           steps: 5,
-        ).reduce((a, b) => a > b ? a : b).toDouble() +
-        minValue;
+        ).reduce((a, b) => a > b ? a : b).toDouble();
     // final stepValues = generateSteps(minValue, maxValue, steps: 5);
     return BarChart(
       BarChartData(
-        gridData: const FlGridData(show: false),
+        gridData: const FlGridData(show: true, drawVerticalLine: false),
         titlesData: FlTitlesData(
           rightTitles: const AxisTitles(
             sideTitles: SideTitles(showTitles: false),
@@ -219,23 +216,24 @@ class WaterQualityChart extends StatelessWidget {
                 //   return SizedBox.shrink();
                 // }
                 return Text(
-                  parameterSI,
-                  style: const TextStyle(color: Colors.white70, fontSize: 12),
+                  '${value.toStringAsFixed(0)} $parameterSI',
+                  style: const TextStyle(color: Colors.white70, fontSize: 10),
                 );
               },
             ),
           ),
         ),
         borderData: FlBorderData(show: false),
-        minY: minY,
+        minY: 0,
         maxY: maxY,
+
         barGroups: List.generate(values.length, (index) {
           return BarChartGroupData(
             x: index,
             barRods: [
               BarChartRodData(
                 toY: values[index].toDouble(),
-                color: const Color(0xFF4ECDC4),
+                color: linecolor,
                 width: 12,
                 borderRadius: BorderRadius.zero,
               ),

@@ -3,6 +3,7 @@ import 'package:waterapp/network/api.dart';
 abstract class ApiDS {
   Future<List<Map<String, dynamic>>> getSensorData();
   Future<Map<String, dynamic>> getPrediction();
+  Future<bool> login({required String fcmtoken});
 }
 
 class ApiDsImpl implements ApiDS {
@@ -33,6 +34,21 @@ class ApiDsImpl implements ApiDS {
         return (res.data as List).cast<Map<String, dynamic>>();
       } else {
         return [];
+      }
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<bool> login({required String fcmtoken}) async {
+    try {
+      final dio = await _api.getDio();
+      final res = await dio.post('/api/login', data: {"fcmtoken": fcmtoken});
+      if (res.statusCode == 200 && res.data['status'] == true) {
+        return true;
+      } else {
+        return false;
       }
     } catch (e) {
       rethrow;

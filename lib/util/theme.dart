@@ -4,6 +4,7 @@ import 'package:waterapp/util/color.dart';
 ThemeData getDarkTheme() {
   return ThemeData(
     scaffoldBackgroundColor: AppColor.primarydark,
+    progressIndicatorTheme: ProgressIndicatorThemeData(color: Colors.white),
     appBarTheme: const AppBarTheme(
       backgroundColor: AppColor.onprimarydark,
       elevation: 0,
