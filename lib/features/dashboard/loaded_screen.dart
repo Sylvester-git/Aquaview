@@ -54,7 +54,7 @@ class LoadedDashBoard extends StatelessWidget {
                     //! PH
                     WaterQualityChart(
                       dates: dates,
-                      values: value.map((data) => data.pH).take(14).toList(),
+                      values: value.map((data) => data.pH).take(6).toList(),
                       parameterName: 'PH Level',
                       subText: 'Acidity / Alkalinity',
                       isHistogram: false,
@@ -96,7 +96,7 @@ class LoadedDashBoard extends StatelessWidget {
                               .toList(), // Example TDS values
                       parameterName: 'Temperature',
                       subText: 'Water temperature',
-                      isHistogram: false,
+                      isHistogram: true,
                       parameterSI: 'C',
                     ),
                   ],

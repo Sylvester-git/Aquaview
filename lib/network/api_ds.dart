@@ -6,13 +6,14 @@ abstract class ApiDS {
 }
 
 class ApiDsImpl implements ApiDS {
-  final Api _api;
+  final Api _api = Api();
 
-  ApiDsImpl({required Api api}) : _api = api;
+  ApiDsImpl();
   @override
   Future<Map<String, dynamic>> getPrediction() async {
     try {
-      final res = await _api.dio.get('/api/predict');
+      final dio = await _api.getDio();
+      final res = await dio.get('/api/predict');
       if (res.statusCode == 200 && (res.data as Map).isNotEmpty) {
         return (res.data as Map<String, dynamic>);
       } else {
@@ -26,9 +27,10 @@ class ApiDsImpl implements ApiDS {
   @override
   Future<List<Map<String, dynamic>>> getSensorData() async {
     try {
-      final res = await _api.dio.get('/api/sensor_data');
+      final dio = await _api.getDio();
+      final res = await dio.get('/api/sensor_data');
       if (res.statusCode == 200 && (res.data as List).isNotEmpty) {
-        return (res.data as List<Map<String, dynamic>>);
+        return (res.data as List).cast<Map<String, dynamic>>();
       } else {
         return [];
       }

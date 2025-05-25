@@ -22,7 +22,7 @@ class _DashboardPageState extends State<DashboardPage> {
   void initState() {
     super.initState();
     getWQMSData();
-    refreshWQMSData();
+    // refreshWQMSData();
   }
 
   void getWQMSData() async {

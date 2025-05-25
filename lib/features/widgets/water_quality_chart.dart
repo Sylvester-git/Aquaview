@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:waterapp/util/color.dart';
@@ -58,22 +60,25 @@ class WaterQualityChart extends StatelessWidget {
   }
 
   Widget _buildLineChart() {
-    final minValue = (values.reduce((a, b) => a < b ? a : b)).floorToDouble();
-    final maxValue = (values.reduce((a, b) => a > b ? a : b)).ceilToDouble();
-    final minY =
-        generateSteps(
-          minValue,
-          maxValue,
-          steps: 5,
-        ).reduce((a, b) => a < b ? a : b).toDouble() -
-        minValue;
-    final maxY =
-        generateSteps(
-          minValue,
-          maxValue,
-          steps: 5,
-        ).reduce((a, b) => a > b ? a : b).toDouble() +
-        minValue;
+    final minValue =
+        (values.reduce((a, b) => a < b ? a : b) - 0.5).floorToDouble();
+    final maxValue =
+        (values.reduce((a, b) => a > b ? a : b) + 0.5).ceilToDouble();
+    // final minY =
+    //     generateSteps(
+    //       minValue,
+    //       maxValue,
+    //       steps: 5,
+    //     ).reduce((a, b) => a < b ? a : b).toDouble() -
+    //     minValue;
+    // final maxY =
+    //     generateSteps(
+    //       minValue,
+    //       maxValue,
+    //       steps: 5,
+    //     ).reduce((a, b) => a > b ? a : b).toDouble() +
+    //     minValue;
+    log(dates.toString());
 
     return LineChart(
       LineChartData(
@@ -94,12 +99,14 @@ class WaterQualityChart extends StatelessWidget {
           bottomTitles: AxisTitles(
             sideTitles: SideTitles(
               showTitles: true,
+
               getTitlesWidget: (value, meta) {
                 if (value.toInt() >= dates.length) {
                   return const SizedBox.shrink();
                 }
+
                 return Padding(
-                  padding: const EdgeInsets.only(top: 8.0),
+                  padding: const EdgeInsets.only(top: 8.0, right: 8),
                   child: Text(
                     dates[value.toInt()],
                     style: const TextStyle(color: Colors.white70, fontSize: 10),
@@ -117,10 +124,10 @@ class WaterQualityChart extends StatelessWidget {
         ),
         borderData: FlBorderData(show: false),
         minX: 0,
-        maxX: (dates.length - 1).toDouble(),
-        minY: minY,
+        maxX: (dates.length).toDouble() - 1,
+        minY: minValue,
 
-        maxY: maxY,
+        maxY: maxValue,
         lineBarsData: [
           LineChartBarData(
             spots: List.generate(
@@ -128,8 +135,9 @@ class WaterQualityChart extends StatelessWidget {
               (index) => FlSpot(index.toDouble(), values[index]),
             ),
             isCurved: true,
-            color: const Color(0xFF4ECDC4),
+            barWidth: 1.5,
 
+            color: const Color(0xFF4ECDC4),
             dotData: const FlDotData(show: true),
             belowBarData: BarAreaData(show: false),
           ),
@@ -208,7 +216,7 @@ class WaterQualityChart extends StatelessWidget {
                 //   return SizedBox.shrink();
                 // }
                 return Text(
-                  'va',
+                  parameterSI,
                   style: const TextStyle(color: Colors.white70, fontSize: 12),
                 );
               },

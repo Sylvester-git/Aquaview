@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:waterapp/app/provider.dart';
 import 'package:waterapp/features/dashboard/dashboard.dart';
 import 'package:waterapp/util/theme.dart';
 
@@ -11,10 +12,12 @@ class RootApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: getDarkTheme(),
-      debugShowCheckedModeBanner: false,
-      home: DashboardPage(),
+    return getProvider(
+      child: MaterialApp(
+        theme: getDarkTheme(),
+        debugShowCheckedModeBanner: false,
+        home: DashboardPage(),
+      ),
     );
   }
 }

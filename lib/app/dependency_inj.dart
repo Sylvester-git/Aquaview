@@ -7,11 +7,9 @@ import 'package:waterapp/network/api_repo.dart';
 
 final instance = GetIt.instance;
 Future<void> initDependencyInj() async {
-  // DIO API
-  instance.registerLazySingleton<Api>(() => Api());
 
   //Datasource
-  instance.registerLazySingleton<ApiDS>(() => ApiDsImpl(api: instance()));
+  instance.registerLazySingleton<ApiDS>(() => ApiDsImpl());
 
   //Repository
   instance.registerLazySingleton<ApiRepo>(() => ApiRepoImpl(apiDS: instance()));
