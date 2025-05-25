@@ -89,7 +89,7 @@ class WaterQualityChart extends StatelessWidget {
                   padding: const EdgeInsets.only(top: 8.0),
                   child: Text(
                     dates[value.toInt()],
-                    style: const TextStyle(color: Colors.white70, fontSize: 12),
+                    style: const TextStyle(color: Colors.white70, fontSize: 10),
                   ),
                 );
               },

@@ -17,6 +17,7 @@ dependencies:
   fl_chart:
   google_fonts: 
   equatable: 
+  intl: 
   dartz: 
   go_router: 
   pretty_dio_logger: 

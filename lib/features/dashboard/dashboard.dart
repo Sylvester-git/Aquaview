@@ -7,7 +7,6 @@ import 'package:waterapp/features/controllers/api_ctrl.dart';
 import 'package:waterapp/features/cubit/get_prediction/get_prediction_cubit.dart';
 import 'package:waterapp/features/cubit/get_sensor_data/get_sensor_data_cubit.dart';
 import 'package:waterapp/features/dashboard/loaded_screen.dart';
-import 'package:waterapp/features/widgets/water_quality_chart.dart';
 import 'package:waterapp/util/color.dart';
 
 class DashboardPage extends StatefulWidget {
@@ -55,9 +54,54 @@ class _DashboardPageState extends State<DashboardPage> {
     return Scaffold(
       body: SafeArea(
         child:
-            (getPredictionCubit.state is GettingPrediction ||
-                    getSensorDataCubit.state is GettingSensorData)
+            ((getPredictionCubit.state is GettingPrediction ||
+                        getPredictionCubit.state is GetPredictionInitial) ||
+                    (getSensorDataCubit.state is GettingSensorData ||
+                        getSensorDataCubit.state is GetSensorDataInitial))
                 ? Center(child: CircularProgressIndicator.adaptive())
+                : (getPredictionCubit.state is ErrorGettingPrediction ||
+                    getSensorDataCubit.state is ErrorGettingSensorData)
+                ? Center(
+                  child: Column(
+                    spacing: 20,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        'An error Occured ${(getPredictionCubit.state as ErrorGettingPrediction).errormessage}',
+                        style: GoogleFonts.sora(
+                          fontSize: 24,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColor.phcolor,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(10)),
+                          ),
+                        ),
+                        onPressed: () async {
+                          await Future.wait([
+                            ApiCtrl.getPrediction(context: context),
+                            ApiCtrl.getSensorData(context: context),
+                          ]);
+                        },
+                        child: Center(
+                          child: Text(
+                            'Reload',
+                            style: GoogleFonts.sora(
+                              fontSize: 16,
+                              color: Colors.white,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                )
                 : LoadedDashBoard(),
       ),
     );

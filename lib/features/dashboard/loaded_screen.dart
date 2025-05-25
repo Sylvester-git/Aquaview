@@ -5,6 +5,7 @@ import 'package:waterapp/features/cubit/get_prediction/get_prediction_cubit.dart
 import 'package:waterapp/features/cubit/get_sensor_data/get_sensor_data_cubit.dart';
 import 'package:waterapp/features/widgets/water_quality_chart.dart';
 import 'package:waterapp/util/color.dart';
+import 'package:waterapp/util/functions.dart';
 
 class LoadedDashBoard extends StatelessWidget {
   const LoadedDashBoard({super.key});
@@ -40,63 +41,63 @@ class LoadedDashBoard extends StatelessWidget {
             padding: EdgeInsets.symmetric(horizontal: 12),
             child: BlocBuilder<GetSensorDataCubit, GetSensorDataState>(
               builder: (context, getSensorstate) {
+                final value = (getSensorstate as GottenSensorData).sensorData;
+                final dates = getDates(
+                  timestamps: value.map((data) => data.timestamp).toList(),
+                );
                 return Column(
+                  spacing: 20,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    SizedBox(height: 30),
+                    SizedBox(height: 20),
+                    //! PH
                     WaterQualityChart(
-                      dates: [
-                        'Apr 16',
-                        'Apr 20',
-                        'Apr 24',
-                        'Apr 28',
-                        'May 2',
-                        'May 6',
-                        'May 10',
-                      ],
-                      values: [6.7, 7.4, 6.0, 12.3, 7.0, 7.5, 6.5],
+                      dates: dates,
+                      values: value.map((data) => data.pH).take(14).toList(),
                       parameterName: 'PH Level',
                       subText: 'Acidity / Alkalinity',
                       isHistogram: false,
                       parameterSI: '',
                     ),
+                    //! TDS
                     WaterQualityChart(
-                      dates: [
-                        'Apr 16',
-                        'Apr 20',
-                        'Apr 24',
-                        'Apr 28',
-                        'May 2',
-                        'May 6',
-                        'May 10',
-                      ],
-                      values: [
-                        100,
-                        200,
-                        50,
-                        75,
-                        350,
-                        125,
-                        50,
-                        65,
-                        39,
-                        40,
-                        50,
-                        30,
-                        50,
-                        100,
-                        40,
-                        50,
-                        20,
-                        94,
-                        29,
-                        30,
-                      ], // Example TDS values
+                      dates: dates,
+                      values:
+                          value
+                              .map((data) => data.tds)
+                              .take(20)
+                              .toList(), // Example TDS values
                       parameterName: 'TDS (Total Dissolved Solids)',
                       subText: 'Dissolved particles concentration',
                       isHistogram: true,
-                      parameterSI: '',
+                      parameterSI: 'ppm',
+                    ),
+                    //! TURBIDITY
+                    WaterQualityChart(
+                      dates: dates,
+                      values:
+                          value
+                              .map((data) => data.tub)
+                              .take(14)
+                              .toList(), // Example TDS values
+                      parameterName: 'Turbidity',
+                      subText: 'Water clarity level',
+                      isHistogram: false,
+                      parameterSI: 'NTU',
+                    ),
+                    //! TEMPERATURE
+                    WaterQualityChart(
+                      dates: dates,
+                      values:
+                          value
+                              .map((data) => data.temp)
+                              .take(14)
+                              .toList(), // Example TDS values
+                      parameterName: 'Temperature',
+                      subText: 'Water temperature',
+                      isHistogram: false,
+                      parameterSI: 'C',
                     ),
                   ],
                 );
