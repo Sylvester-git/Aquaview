@@ -12,6 +12,7 @@ class WaterQualityChart extends StatelessWidget {
     required this.values,
     required this.parameterName,
     required this.subText,
+    this.isPH = false,
     required this.isHistogram,
     required this.parameterSI,
   });
@@ -19,6 +20,7 @@ class WaterQualityChart extends StatelessWidget {
   final List<String> dates;
   final List<double> values;
   final String parameterName;
+  final bool isPH;
   final String subText;
   final bool isHistogram;
   final String parameterSI;
@@ -64,20 +66,19 @@ class WaterQualityChart extends StatelessWidget {
         (values.reduce((a, b) => a < b ? a : b) - 0.5).floorToDouble();
     final maxValue =
         (values.reduce((a, b) => a > b ? a : b) + 0.5).ceilToDouble();
-    // final minY =
-    //     generateSteps(
-    //       minValue,
-    //       maxValue,
-    //       steps: 5,
-    //     ).reduce((a, b) => a < b ? a : b).toDouble() -
-    //     minValue;
-    // final maxY =
-    //     generateSteps(
-    //       minValue,
-    //       maxValue,
-    //       steps: 5,
-    //     ).reduce((a, b) => a > b ? a : b).toDouble() +
-    //     minValue;
+    final minY =
+        generateSteps(
+          minValue,
+          maxValue,
+          steps: 5,
+        ).reduce((a, b) => a < b ? a : b).toDouble();
+    final maxY =
+        generateSteps(
+          minValue,
+          maxValue,
+          steps: 5,
+        ).reduce((a, b) => a > b ? a : b).toDouble();
+
     log(dates.toString());
 
     return LineChart(
@@ -87,11 +88,14 @@ class WaterQualityChart extends StatelessWidget {
           leftTitles: AxisTitles(
             sideTitles: SideTitles(
               showTitles: true,
-              reservedSize: 40,
+              reservedSize: 50,
               getTitlesWidget: (value, meta) {
                 return Text(
-                  value.toStringAsFixed(1),
-                  style: const TextStyle(color: Colors.white70, fontSize: 12),
+                  '${value.toStringAsFixed(1)} $parameterSI',
+                  style: TextStyle(
+                    color: Colors.white70,
+                    fontSize: parameterSI.isEmpty ? 12 : 9,
+                  ),
                 );
               },
             ),
@@ -125,9 +129,8 @@ class WaterQualityChart extends StatelessWidget {
         borderData: FlBorderData(show: false),
         minX: 0,
         maxX: (dates.length).toDouble() - 1,
-        minY: minValue,
-
-        maxY: maxValue,
+        minY: minY,
+        maxY: maxY,
         lineBarsData: [
           LineChartBarData(
             spots: List.generate(

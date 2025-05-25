@@ -38,7 +38,7 @@ class LoadedDashBoard extends StatelessWidget {
         ),
         Expanded(
           child: SingleChildScrollView(
-            padding: EdgeInsets.symmetric(horizontal: 12),
+            padding: EdgeInsets.only(left: 12, right: 12, bottom: 30),
             child: BlocBuilder<GetSensorDataCubit, GetSensorDataState>(
               builder: (context, getSensorstate) {
                 final value = (getSensorstate as GottenSensorData).sensorData;
@@ -54,6 +54,7 @@ class LoadedDashBoard extends StatelessWidget {
                     //! PH
                     WaterQualityChart(
                       dates: dates,
+                      isPH: true,
                       values: value.map((data) => data.pH).take(6).toList(),
                       parameterName: 'PH Level',
                       subText: 'Acidity / Alkalinity',
