@@ -8,6 +8,7 @@ import 'package:waterapp/features/cubit/get_prediction/get_prediction_cubit.dart
 import 'package:waterapp/features/cubit/get_sensor_data/get_sensor_data_cubit.dart';
 import 'package:waterapp/features/dashboard/loaded_screen.dart';
 import 'package:waterapp/features/widgets/scaffold_drawer.dart';
+import 'package:waterapp/notification_helper.dart';
 import 'package:waterapp/util/color.dart';
 
 class DashboardPage extends StatefulWidget {
@@ -24,14 +25,17 @@ class _DashboardPageState extends State<DashboardPage> {
   @override
   void initState() {
     super.initState();
+
     getWQMSData();
     refreshWQMSData();
+    PushNotificationHelper.initialize();
   }
 
   void getWQMSData() async {
     await Future.wait([
       ApiCtrl.getPrediction(context: context),
       ApiCtrl.getSensorData(context: context),
+      ApiCtrl.login(context: context),
     ]);
   }
 

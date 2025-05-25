@@ -16,6 +16,7 @@ dependencies:
   flutter_bloc: ^9.1.1
   fl_chart:
   firebase_messaging: 
+  flutter_local_notifications: 
   google_fonts: 
   equatable: 
   intl: 

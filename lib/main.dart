@@ -19,7 +19,9 @@ void main() async {
       await ConfigServices.loadConfig();
       log(ConfigServices.isLoaded.toString());
       if (Firebase.apps.isEmpty) {
-        Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+        await Firebase.initializeApp(
+          options: DefaultFirebaseOptions.currentPlatform,
+        );
       }
       Bloc.observer = MyBlocObserver();
       runApp(RootApp());

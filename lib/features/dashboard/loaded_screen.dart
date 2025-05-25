@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:waterapp/features/cubit/current_page/current_page_cubit.dart';
 import 'package:waterapp/features/cubit/get_prediction/get_prediction_cubit.dart';
-import 'package:waterapp/features/cubit/get_sensor_data/get_sensor_data_cubit.dart';
-import 'package:waterapp/features/widgets/water_quality_chart.dart';
+import 'package:waterapp/features/dashboard/pages/alerts_page.dart';
+import 'package:waterapp/features/dashboard/pages/dashboard_page.dart';
+
 import 'package:waterapp/util/color.dart';
-import 'package:waterapp/util/functions.dart';
+import 'package:waterapp/util/enums.dart';
 
 class LoadedDashBoard extends StatelessWidget {
   const LoadedDashBoard({super.key, required this.scaffoldKey});
@@ -14,6 +16,7 @@ class LoadedDashBoard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final currenpagecubit = context.watch<CurrentPageCubit>();
     return Column(
       children: [
         Container(
@@ -32,7 +35,9 @@ class LoadedDashBoard extends StatelessWidget {
                     child: Icon(Icons.menu, color: Colors.white),
                   ),
                   Text(
-                    'Dashboard',
+                    currenpagecubit.state == CurrenPages.dashboard
+                        ? 'Dashboard'
+                        : "Alerts",
                     style: GoogleFonts.sora(
                       fontSize: 24,
                       color: Colors.white,
@@ -73,80 +78,9 @@ class LoadedDashBoard extends StatelessWidget {
             ],
           ),
         ),
-        Expanded(
-          child: SingleChildScrollView(
-            padding: EdgeInsets.only(left: 12, right: 12, bottom: 30),
-            child: BlocBuilder<GetSensorDataCubit, GetSensorDataState>(
-              builder: (context, getSensorstate) {
-                final value = (getSensorstate as GottenSensorData).sensorData;
-                final dates = getDates(
-                  timestamps: value.map((data) => data.timestamp).toList(),
-                );
-                return Column(
-                  spacing: 20,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    SizedBox(height: 20),
-                    //! PH
-                    WaterQualityChart(
-                      dates: dates,
-                      isPH: true,
-                      linecolor: AppColor.phcolor,
-                      values: value.map((data) => data.pH).take(6).toList(),
-                      parameterName: 'PH Level',
-                      subText: 'Acidity / Alkalinity',
-                      isHistogram: false,
-                      parameterSI: '',
-                    ),
-                    //! TDS
-                    WaterQualityChart(
-                      dates: dates,
-                      linecolor: AppColor.tdscolor,
-                      values:
-                          value
-                              .map((data) => data.tds)
-                              .take(20)
-                              .toList(), // Example TDS values
-                      parameterName: 'TDS (Total Dissolved Solids)',
-                      subText: 'Dissolved particles concentration',
-                      isHistogram: true,
-                      parameterSI: 'ppm',
-                    ),
-                    //! TURBIDITY
-                    WaterQualityChart(
-                      dates: dates,
-                      linecolor: AppColor.turbiditycolor,
-                      values:
-                          value
-                              .map((data) => data.tub)
-                              .take(14)
-                              .toList(), // Example TDS values
-                      parameterName: 'Turbidity',
-                      subText: 'Water clarity level',
-                      isHistogram: false,
-                      parameterSI: 'NTU',
-                    ),
-                    //! TEMPERATURE
-                    WaterQualityChart(
-                      dates: dates,
-                      linecolor: AppColor.temperaturecolor,
-                      values:
-                          value
-                              .map((data) => data.temp)
-                              .take(14)
-                              .toList(), // Example TDS values
-                      parameterName: 'Temperature',
-                      subText: 'Water temperature',
-                      isHistogram: true,
-                      parameterSI: 'C',
-                    ),
-                  ],
-                );
-              },
-            ),
-          ),
-        ),
+        currenpagecubit.state == CurrenPages.dashboard
+            ? DashboardPage()
+            : AlertsPage(),
       ],
     );
   }
