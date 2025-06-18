@@ -1,3 +1,4 @@
+import 'package:waterapp/features/model/alerts.dart';
 import 'package:waterapp/features/model/prediction.dart';
 import 'package:waterapp/features/model/wqms.dart';
 
@@ -12,6 +13,17 @@ extension ConvertToPredictionModel on Map<String, dynamic> {
       tub: data['turbidity'],
       confidence: data['confidence'],
       status: data['status'],
+    );
+  }
+}
+
+extension ConvertToAlertsModel on Map<String, dynamic> {
+  Alerts convertToAlertsModel() {
+    final data = this;
+    return Alerts(
+      id: data['_id'],
+      timestamp: data['timestamp'],
+      alerts: data['alerts'],
     );
   }
 }

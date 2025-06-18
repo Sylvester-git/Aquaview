@@ -1,5 +1,6 @@
 import 'package:get_it/get_it.dart';
 import 'package:waterapp/features/cubit/current_page/current_page_cubit.dart';
+import 'package:waterapp/features/cubit/get_alerts/get_alerts_cubit.dart';
 import 'package:waterapp/features/cubit/get_prediction/get_prediction_cubit.dart';
 import 'package:waterapp/features/cubit/get_sensor_data/get_sensor_data_cubit.dart';
 import 'package:waterapp/features/cubit/login/login_cubit.dart';
@@ -23,4 +24,7 @@ Future<void> initDependencyInj() async {
   );
   instance.registerLazySingleton<LoginCubit>(() => LoginCubit(instance()));
   instance.registerLazySingleton<CurrentPageCubit>(() => CurrentPageCubit());
+  instance.registerLazySingleton<GetAlertsCubit>(
+    () => GetAlertsCubit(instance()),
+  );
 }

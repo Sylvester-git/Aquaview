@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:waterapp/features/cubit/get_alerts/get_alerts_cubit.dart';
 import 'package:waterapp/features/cubit/get_prediction/get_prediction_cubit.dart';
 import 'package:waterapp/features/cubit/get_sensor_data/get_sensor_data_cubit.dart';
 
@@ -21,5 +22,6 @@ class ApiCtrl {
   static Future<void> login({required BuildContext context}) =>
       context.read<LoginCubit>().login();
 
-  
+  static Future<void> getAlerts({required BuildContext context}) =>
+      context.read<GetAlertsCubit>().getAlerts();
 }
