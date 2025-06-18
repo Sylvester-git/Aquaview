@@ -24,4 +24,7 @@ class ApiCtrl {
 
   static Future<void> getAlerts({required BuildContext context}) =>
       context.read<GetAlertsCubit>().getAlerts();
+
+  static Future<void> refreshAlerts({required BuildContext context}) =>
+      context.read<GetAlertsCubit>().refreshAlerts();
 }

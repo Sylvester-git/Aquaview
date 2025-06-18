@@ -34,6 +34,7 @@ class _DashboardPageState extends State<DashboardPage> {
     await Future.wait([
       ApiCtrl.getPrediction(context: context),
       ApiCtrl.getSensorData(context: context),
+      ApiCtrl.getAlerts(context: context),
       ApiCtrl.login(context: context),
     ]);
   }
@@ -42,6 +43,7 @@ class _DashboardPageState extends State<DashboardPage> {
     timer = Timer.periodic(const Duration(minutes: 2), (timer) async {
       await Future.wait([
         ApiCtrl.refreshSensorData(context: context),
+        ApiCtrl.refreshAlerts(context: context),
         ApiCtrl.refreshePrediction(context: context),
       ]);
     });

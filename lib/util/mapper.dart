@@ -23,7 +23,7 @@ extension ConvertToAlertsModel on Map<String, dynamic> {
     return Alerts(
       id: data['_id'],
       timestamp: data['timestamp'],
-      alerts: data['alerts'],
+      alerts: (data['alerts'] as List).cast<String>(),
     );
   }
 }

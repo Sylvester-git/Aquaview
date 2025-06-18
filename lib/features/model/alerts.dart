@@ -3,7 +3,7 @@ import 'package:equatable/equatable.dart';
 class Alerts extends Equatable {
   final String id;
   final String timestamp;
-  final List<String> alerts;
+  final List alerts;
 
   const Alerts({
     required this.id,

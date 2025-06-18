@@ -37,3 +37,9 @@ List<String> getDates({required List<String> timestamps}) {
 
   return sortedDates.take(7).map((entry) => entry.key).toList();
 }
+
+String convertTimestamp({required String timestamps}) {
+  final DateFormat dateFormat = DateFormat('MMMM d,').add_jm();
+  final DateTime datatime = DateTime.parse(timestamps);
+  return dateFormat.format(datatime);
+}
