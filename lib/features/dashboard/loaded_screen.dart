@@ -55,15 +55,15 @@ class LoadedDashBoard extends StatelessWidget {
                                       .status
                                       .toLowerCase() ==
                                   'unsafe'
-                              ? AppColor.red.withOpacity(.8)
-                              : AppColor.green.withOpacity(.8),
-                      borderRadius: BorderRadius.all(Radius.circular(100)),
+                              ? AppColor.red.withOpacity(.6)
+                              : AppColor.green.withOpacity(.6),
+                      borderRadius: BorderRadius.all(Radius.circular(10)),
                     ),
                     child: Center(
                       child: Text(
                         (getPredictionstate.prediction.status),
                         style: GoogleFonts.sora(
-                          fontSize: 12,
+                          fontSize: 14,
                           color: Colors.white,
                         ),
                       ),

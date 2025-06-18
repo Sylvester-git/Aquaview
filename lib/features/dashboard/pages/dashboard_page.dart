@@ -18,7 +18,7 @@ class DashboardPage extends StatelessWidget {
           builder: (context, getSensorstate) {
             final value = (getSensorstate as GottenSensorData).sensorData;
             final dates = getDates(
-              timestamps: value.map((data) => data.timestamp).toList(),
+              timestamps: value.map((data) => data.timestamp).toList().toList(),
             );
             return Column(
               spacing: 20,
@@ -30,9 +30,20 @@ class DashboardPage extends StatelessWidget {
                 WaterQualityChart(
                   dates: dates,
                   currentReading:
-                      value.map((data) => data.pH).take(5).toList().last,
+                      value
+                          .map((data) => data.pH)
+                          .take(5)
+                          .toList()
+                          .reversed
+                          .last,
                   linecolor: AppColor.phcolor,
-                  values: value.map((data) => data.pH).take(5).toList(),
+                  values:
+                      value
+                          .map((data) => data.pH)
+                          .take(5)
+                          .toList()
+                          .reversed
+                          .toList(),
                   parameterName: 'PH Level',
                   subText: 'Acidity / Alkalinity',
                   isHistogram: false,
@@ -46,9 +57,16 @@ class DashboardPage extends StatelessWidget {
                       value
                           .map((data) => data.tds)
                           .take(5)
+                          .toList()
+                          .reversed
                           .toList(), // Example TDS values
                   currentReading:
-                      value.map((data) => data.tds).take(5).toList().last,
+                      value
+                          .map((data) => data.tds)
+                          .take(5)
+                          .toList()
+                          .reversed
+                          .last,
                   parameterName: 'TDS',
                   subText: 'Total Dissolved Solids',
                   isHistogram: false,
@@ -62,11 +80,18 @@ class DashboardPage extends StatelessWidget {
                       value
                           .map((data) => data.tub)
                           .take(5)
+                          .toList()
+                          .reversed
                           .toList(), // Example TDS values
                   parameterName: 'Turbidity',
                   subText: 'Water clarity level',
                   currentReading:
-                      value.map((data) => data.tub).take(5).toList().last,
+                      value
+                          .map((data) => data.tub)
+                          .take(5)
+                          .toList()
+                          .reversed
+                          .last,
                   isHistogram: false,
                   parameterSI: 'NTU',
                 ),
@@ -78,9 +103,16 @@ class DashboardPage extends StatelessWidget {
                       value
                           .map((data) => data.temp)
                           .take(5)
+                          .toList()
+                          .reversed
                           .toList(), // Example TDS values
                   currentReading:
-                      value.map((data) => data.temp).take(5).toList().last,
+                      value
+                          .map((data) => data.temp)
+                          .take(5)
+                          .toList()
+                          .reversed
+                          .last,
                   parameterName: 'Temperature',
                   subText: 'Water temperature',
                   isHistogram: false,

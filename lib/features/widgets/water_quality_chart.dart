@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:waterapp/util/color.dart';
@@ -112,7 +114,7 @@ class WaterQualityChart extends StatelessWidget {
           maxValue,
           steps: 5,
         ).reduce((a, b) => a > b ? a : b).toDouble();
-
+    log(values.toString());
     return LineChart(
       LineChartData(
         gridData: const FlGridData(show: true),
