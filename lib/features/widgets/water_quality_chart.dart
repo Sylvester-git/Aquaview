@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:waterapp/util/color.dart';
@@ -12,20 +10,20 @@ class WaterQualityChart extends StatelessWidget {
     required this.values,
     required this.parameterName,
     required this.subText,
-    this.isPH = false,
     required this.linecolor,
     required this.isHistogram,
     required this.parameterSI,
+    required this.currentReading,
   });
 
   final List<String> dates;
   final List<double> values;
   final String parameterName;
-  final bool isPH;
   final Color linecolor;
   final String subText;
   final bool isHistogram;
   final String parameterSI;
+  final double currentReading;
 
   @override
   Widget build(BuildContext context) {
@@ -39,31 +37,65 @@ class WaterQualityChart extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          //? Title and subtitle
-          Text(
-            parameterName,
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            subText,
-            style: const TextStyle(color: Colors.white70, fontSize: 12),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  //? Title and subtitle
+                  Text(
+                    parameterName,
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    subText,
+                    style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                      color: Colors.white70,
+                      fontSize: 12,
+                    ),
+                  ),
+                ],
+              ),
+              values.isEmpty
+                  ? SizedBox()
+                  : Container(
+                    padding: EdgeInsets.all(5),
+                    decoration: BoxDecoration(
+                      color: linecolor.withOpacity(.5),
+                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                    ),
+                    child: Text(
+                      '$currentReading $parameterSI',
+                      style: Theme.of(
+                        context,
+                      ).textTheme.titleLarge!.copyWith(fontSize: 16),
+                    ),
+                  ),
+            ],
           ),
           const SizedBox(height: 16),
           SizedBox(
             height: 200,
-            child: isHistogram ? _buildHistogram() : _buildLineChart(),
+            child:
+                values.isEmpty || dates.isEmpty
+                    ? Center(
+                      child: Text(
+                        'No available data',
+                        style: Theme.of(context).textTheme.titleLarge,
+                      ),
+                    )
+                    : isHistogram
+                    ? _buildHistogram()
+                    : _buildLineChart(context: context),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildLineChart() {
+  Widget _buildLineChart({required BuildContext context}) {
     final minValue =
         (values.reduce((a, b) => a < b ? a : b) - 0.5).floorToDouble();
     final maxValue =
@@ -81,11 +113,9 @@ class WaterQualityChart extends StatelessWidget {
           steps: 5,
         ).reduce((a, b) => a > b ? a : b).toDouble();
 
-    log(dates.toString());
-
     return LineChart(
       LineChartData(
-        gridData: const FlGridData(show: true, drawVerticalLine: false),
+        gridData: const FlGridData(show: true),
         titlesData: FlTitlesData(
           leftTitles: AxisTitles(
             sideTitles: SideTitles(
@@ -94,7 +124,7 @@ class WaterQualityChart extends StatelessWidget {
               getTitlesWidget: (value, meta) {
                 return Text(
                   '${value.toStringAsFixed(1)} $parameterSI',
-                  style: TextStyle(
+                  style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                     color: Colors.white70,
                     fontSize: parameterSI.isEmpty ? 12 : 9,
                   ),
@@ -102,25 +132,25 @@ class WaterQualityChart extends StatelessWidget {
               },
             ),
           ),
-          bottomTitles: AxisTitles(
-            sideTitles: SideTitles(
-              showTitles: true,
+          // bottomTitles: AxisTitles(
+          //   sideTitles: SideTitles(
+          //     showTitles: true,
 
-              getTitlesWidget: (value, meta) {
-                if (value.toInt() >= dates.length) {
-                  return const SizedBox.shrink();
-                }
+          //     getTitlesWidget: (value, meta) {
+          //       if (value.toInt() >= dates.length) {
+          //         return const SizedBox.shrink();
+          //       }
 
-                return Padding(
-                  padding: const EdgeInsets.only(top: 8.0, right: 8),
-                  child: Text(
-                    dates[value.toInt()],
-                    style: const TextStyle(color: Colors.white70, fontSize: 10),
-                  ),
-                );
-              },
-            ),
-          ),
+          //       return Padding(
+          //         padding: const EdgeInsets.only(top: 8.0, right: 8),
+          //         child: Text(
+          //           dates[value.toInt()],
+          //           style: const TextStyle(color: Colors.white70, fontSize: 10),
+          //         ),
+          //       );
+          //     },
+          //   ),
+          // ),
           topTitles: const AxisTitles(
             sideTitles: SideTitles(showTitles: false),
           ),
@@ -152,8 +182,8 @@ class WaterQualityChart extends StatelessWidget {
             getTooltipItems: (touchedSpots) {
               return touchedSpots.map((spot) {
                 return LineTooltipItem(
-                  '${spot.y.toStringAsFixed(1)} $parameterName',
-                  const TextStyle(color: Colors.white),
+                  '${spot.y.toStringAsFixed(1)} $parameterSI',
+                  Theme.of(context).textTheme.bodySmall!,
                 );
               }).toList();
             },
@@ -186,23 +216,23 @@ class WaterQualityChart extends StatelessWidget {
           rightTitles: const AxisTitles(
             sideTitles: SideTitles(showTitles: false),
           ),
-          bottomTitles: AxisTitles(
-            sideTitles: SideTitles(
-              showTitles: true,
-              getTitlesWidget: (value, meta) {
-                if (value.toInt() >= dates.length) {
-                  return SizedBox.shrink();
-                }
-                return Padding(
-                  padding: const EdgeInsets.only(top: 8.0),
-                  child: Text(
-                    dates[value.toInt()],
-                    style: const TextStyle(color: Colors.white70, fontSize: 11),
-                  ),
-                );
-              },
-            ),
-          ),
+          // bottomTitles: AxisTitles(
+          //   sideTitles: SideTitles(
+          //     showTitles: true,
+          //     getTitlesWidget: (value, meta) {
+          //       if (value.toInt() >= dates.length) {
+          //         return SizedBox.shrink();
+          //       }
+          //       return Padding(
+          //         padding: const EdgeInsets.only(top: 8.0),
+          //         child: Text(
+          //           dates[value.toInt()],
+          //           style: const TextStyle(color: Colors.white70, fontSize: 11),
+          //         ),
+          //       );
+          //     },
+          //   ),
+          // ),
           topTitles: const AxisTitles(
             sideTitles: SideTitles(showTitles: false),
           ),

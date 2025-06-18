@@ -21,13 +21,7 @@ class Api {
       headers: headers,
       baseUrl: ConfigServices.get('BASE_URL'),
     );
-    dio.interceptors.add(
-      PrettyDioLogger(
-        requestHeader: true,
-        requestBody: true,
-        responseHeader: true,
-      ),
-    );
+    dio.interceptors.add(PrettyDioLogger());
     return dio;
   }
 }

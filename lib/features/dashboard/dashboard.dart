@@ -25,7 +25,6 @@ class _DashboardPageState extends State<DashboardPage> {
   @override
   void initState() {
     super.initState();
-
     getWQMSData();
     refreshWQMSData();
     PushNotificationHelper.initialize();

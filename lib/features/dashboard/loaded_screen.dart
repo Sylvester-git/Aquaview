@@ -38,11 +38,7 @@ class LoadedDashBoard extends StatelessWidget {
                     currenpagecubit.state == CurrenPages.dashboard
                         ? 'Dashboard'
                         : "Alerts",
-                    style: GoogleFonts.sora(
-                      fontSize: 24,
-                      color: Colors.white,
-                      fontWeight: FontWeight.w600,
-                    ),
+                    style: Theme.of(context).textTheme.titleLarge,
                   ),
                 ],
               ),

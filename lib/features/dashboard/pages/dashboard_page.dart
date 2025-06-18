@@ -11,7 +11,6 @@ class DashboardPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    
     return Expanded(
       child: SingleChildScrollView(
         padding: EdgeInsets.only(left: 12, right: 12, bottom: 30),
@@ -30,9 +29,10 @@ class DashboardPage extends StatelessWidget {
                 //! PH
                 WaterQualityChart(
                   dates: dates,
-                  isPH: true,
+                  currentReading:
+                      value.map((data) => data.pH).take(5).toList().last,
                   linecolor: AppColor.phcolor,
-                  values: value.map((data) => data.pH).take(6).toList(),
+                  values: value.map((data) => data.pH).take(5).toList(),
                   parameterName: 'PH Level',
                   subText: 'Acidity / Alkalinity',
                   isHistogram: false,
@@ -45,11 +45,13 @@ class DashboardPage extends StatelessWidget {
                   values:
                       value
                           .map((data) => data.tds)
-                          .take(20)
+                          .take(5)
                           .toList(), // Example TDS values
-                  parameterName: 'TDS (Total Dissolved Solids)',
-                  subText: 'Dissolved particles concentration',
-                  isHistogram: true,
+                  currentReading:
+                      value.map((data) => data.tds).take(5).toList().last,
+                  parameterName: 'TDS',
+                  subText: 'Total Dissolved Solids',
+                  isHistogram: false,
                   parameterSI: 'ppm',
                 ),
                 //! TURBIDITY
@@ -59,10 +61,12 @@ class DashboardPage extends StatelessWidget {
                   values:
                       value
                           .map((data) => data.tub)
-                          .take(14)
+                          .take(5)
                           .toList(), // Example TDS values
                   parameterName: 'Turbidity',
                   subText: 'Water clarity level',
+                  currentReading:
+                      value.map((data) => data.tub).take(5).toList().last,
                   isHistogram: false,
                   parameterSI: 'NTU',
                 ),
@@ -73,11 +77,13 @@ class DashboardPage extends StatelessWidget {
                   values:
                       value
                           .map((data) => data.temp)
-                          .take(14)
+                          .take(5)
                           .toList(), // Example TDS values
+                  currentReading:
+                      value.map((data) => data.temp).take(5).toList().last,
                   parameterName: 'Temperature',
                   subText: 'Water temperature',
-                  isHistogram: true,
+                  isHistogram: false,
                   parameterSI: 'C',
                 ),
               ],
