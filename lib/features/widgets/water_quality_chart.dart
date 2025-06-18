@@ -114,7 +114,7 @@ class WaterQualityChart extends StatelessWidget {
           maxValue,
           steps: 5,
         ).reduce((a, b) => a > b ? a : b).toDouble();
-    log(values.toString());
+    log(dates.toString());
     return LineChart(
       LineChartData(
         gridData: const FlGridData(show: true),
@@ -134,25 +134,25 @@ class WaterQualityChart extends StatelessWidget {
               },
             ),
           ),
-          // bottomTitles: AxisTitles(
-          //   sideTitles: SideTitles(
-          //     showTitles: true,
+          bottomTitles: AxisTitles(
+            sideTitles: SideTitles(
+              showTitles: true,
 
-          //     getTitlesWidget: (value, meta) {
-          //       if (value.toInt() >= dates.length) {
-          //         return const SizedBox.shrink();
-          //       }
+              getTitlesWidget: (value, meta) {
+                if (value.toInt() >= dates.length) {
+                  return const SizedBox.shrink();
+                }
 
-          //       return Padding(
-          //         padding: const EdgeInsets.only(top: 8.0, right: 8),
-          //         child: Text(
-          //           dates[value.toInt()],
-          //           style: const TextStyle(color: Colors.white70, fontSize: 10),
-          //         ),
-          //       );
-          //     },
-          //   ),
-          // ),
+                return Padding(
+                  padding: const EdgeInsets.only(top: 8.0, right: 8),
+                  child: Text(
+                    dates[value.toInt()],
+                    style: const TextStyle(color: Colors.white70, fontSize: 10),
+                  ),
+                );
+              },
+            ),
+          ),
           topTitles: const AxisTitles(
             sideTitles: SideTitles(showTitles: false),
           ),

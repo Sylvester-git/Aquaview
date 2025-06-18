@@ -32,7 +32,7 @@ class DashboardPage extends StatelessWidget {
                   currentReading:
                       value
                           .map((data) => data.pH)
-                          .take(5)
+                          .take(6)
                           .toList()
                           .reversed
                           .last,
@@ -40,7 +40,7 @@ class DashboardPage extends StatelessWidget {
                   values:
                       value
                           .map((data) => data.pH)
-                          .take(5)
+                          .take(6)
                           .toList()
                           .reversed
                           .toList(),
@@ -56,14 +56,14 @@ class DashboardPage extends StatelessWidget {
                   values:
                       value
                           .map((data) => data.tds)
-                          .take(5)
+                          .take(6)
                           .toList()
                           .reversed
                           .toList(), // Example TDS values
                   currentReading:
                       value
                           .map((data) => data.tds)
-                          .take(5)
+                          .take(6)
                           .toList()
                           .reversed
                           .last,
@@ -79,7 +79,7 @@ class DashboardPage extends StatelessWidget {
                   values:
                       value
                           .map((data) => data.tub)
-                          .take(5)
+                          .take(6)
                           .toList()
                           .reversed
                           .toList(), // Example TDS values
@@ -88,7 +88,7 @@ class DashboardPage extends StatelessWidget {
                   currentReading:
                       value
                           .map((data) => data.tub)
-                          .take(5)
+                          .take(6)
                           .toList()
                           .reversed
                           .last,
@@ -102,14 +102,14 @@ class DashboardPage extends StatelessWidget {
                   values:
                       value
                           .map((data) => data.temp)
-                          .take(5)
+                          .take(6)
                           .toList()
                           .reversed
                           .toList(), // Example TDS values
                   currentReading:
                       value
                           .map((data) => data.temp)
-                          .take(5)
+                          .take(6)
                           .toList()
                           .reversed
                           .last,
