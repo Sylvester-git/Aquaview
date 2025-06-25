@@ -1,4 +1,5 @@
 import 'package:intl/intl.dart';
+import 'package:waterapp/features/model/wqms.dart';
 
 List<int> generateSteps(double minValue, double maxValue, {int steps = 10}) {
   if (minValue > maxValue) {
@@ -18,7 +19,7 @@ List<int> generateSteps(double minValue, double maxValue, {int steps = 10}) {
 }
 
 List<String> getDates({required List<String> timestamps}) {
-  final DateFormat formatter = DateFormat('MMM d');
+  final DateFormat formatter = DateFormat().add_jm();
   final List<MapEntry<DateTime, String>> dateTimePairs =
       timestamps.map((timestamp) {
         DateTime dateTime = DateTime.parse(timestamp);
@@ -35,11 +36,28 @@ List<String> getDates({required List<String> timestamps}) {
       uniqueDateMap.entries.toList()
         ..sort((a, b) => a.value.compareTo(b.value));
 
-  return sortedDates.take(7).map((entry) => entry.key).toList();
+  return sortedDates.take(6).map((entry) => entry.key).toList();
 }
 
 String convertTimestamp({required String timestamps}) {
   final DateFormat dateFormat = DateFormat('MMMM d,').add_jm();
   final DateTime datatime = DateTime.parse(timestamps);
   return dateFormat.format(datatime);
+}
+
+Map<String, List<WQMSModel>> groupByDay(List<WQMSModel> items) {
+  final Map<String, List<WQMSModel>> grouped = {};
+
+  for (final item in items) {
+    final date = DateTime.parse(item.timestamp);
+    final key =
+        "${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}";
+
+    if (!grouped.containsKey(key)) {
+      grouped[key] = [];
+    }
+    grouped[key]!.add(item);
+  }
+
+  return grouped;
 }

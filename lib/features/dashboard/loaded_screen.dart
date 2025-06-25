@@ -45,27 +45,19 @@ class LoadedDashBoard extends StatelessWidget {
 
               BlocBuilder<GetPredictionCubit, GetPredictionState>(
                 builder: (context, getPredictionstate) {
-                  return Container(
-                    padding: EdgeInsets.all(6),
-
-                    decoration: BoxDecoration(
-                      color:
-                          (getPredictionstate as GottenPrediction)
-                                      .prediction
-                                      .status
-                                      .toLowerCase() ==
-                                  'unsafe'
-                              ? AppColor.red.withOpacity(.6)
-                              : AppColor.green.withOpacity(.6),
-                      borderRadius: BorderRadius.all(Radius.circular(10)),
-                    ),
-                    child: Center(
-                      child: Text(
-                        (getPredictionstate.prediction.status),
-                        style: GoogleFonts.sora(
-                          fontSize: 14,
-                          color: Colors.white,
-                        ),
+                  return Center(
+                    child: Text(
+                      ((getPredictionstate as GottenPrediction)
+                          .prediction
+                          .status),
+                      style: GoogleFonts.sora(
+                        fontSize: 16,
+                        color:
+                            (getPredictionstate).prediction.status
+                                        .toLowerCase() ==
+                                    'unsafe'
+                                ? AppColor.red
+                                : AppColor.green,
                       ),
                     ),
                   );

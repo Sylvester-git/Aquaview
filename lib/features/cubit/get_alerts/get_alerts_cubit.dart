@@ -24,13 +24,8 @@ class GetAlertsCubit extends Cubit<GetAlertsState> {
 
   Future<void> refreshAlerts() async {
     final res = await _apiRepo.getAlerts();
-    res.fold(
-      (l) {
-        emit(ErrorGettingAlerts(errormessage: l.message));
-      },
-      (r) {
-        emit(GottenAlerts(alerts: r));
-      },
-    );
+    res.fold((l) {}, (r) {
+      emit(GottenAlerts(alerts: r));
+    });
   }
 }

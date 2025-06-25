@@ -41,3 +41,10 @@ extension ConvertToWQMSModel on Map<String, dynamic> {
     );
   }
 }
+
+extension ConvertToDateTime on String {
+  DateTime convertToDateTime() {
+    final DateTime data = DateTime.parse(this);
+    return data;
+  }
+}

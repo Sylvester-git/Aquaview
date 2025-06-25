@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:waterapp/features/cubit/get_prediction/get_prediction_cubit.dart';
 import 'package:waterapp/features/widgets/water_quality_chart.dart';
 import 'package:waterapp/util/color.dart';
 import 'package:waterapp/util/functions.dart';
+import 'package:waterapp/util/mapper.dart';
 
 import '../../cubit/get_sensor_data/get_sensor_data_cubit.dart';
 
@@ -11,14 +13,31 @@ class DashboardPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final predictionCubit = context.watch<GetPredictionCubit>().state;
     return Expanded(
       child: SingleChildScrollView(
         padding: EdgeInsets.only(left: 12, right: 12, bottom: 30),
         child: BlocBuilder<GetSensorDataCubit, GetSensorDataState>(
           builder: (context, getSensorstate) {
-            final value = (getSensorstate as GottenSensorData).sensorData;
+            final value =
+                (getSensorstate as GottenSensorData).sensorData
+                    .where(
+                      (data) =>
+                          ((data.timestamp.convertToDateTime().day == 19) &&
+                              data.timestamp.convertToDateTime().month == 6),
+                    )
+                    .take(6)
+                    .toList();
             final dates = getDates(
-              timestamps: value.map((data) => data.timestamp).toList().toList(),
+              timestamps:
+                  value
+                      .where(
+                        (data) =>
+                            ((data.timestamp.convertToDateTime().day == 19) &&
+                                data.timestamp.convertToDateTime().month == 6),
+                      )
+                      .map((data) => data.timestamp)
+                      .toList(),
             );
             return Column(
               spacing: 20,
@@ -30,12 +49,9 @@ class DashboardPage extends StatelessWidget {
                 WaterQualityChart(
                   dates: dates,
                   currentReading:
-                      value
-                          .map((data) => data.pH)
-                          .take(6)
-                          .toList()
-                          .reversed
-                          .last,
+                      predictionCubit is! GottenPrediction
+                          ? 0.0
+                          : (predictionCubit.prediction.pH),
                   linecolor: AppColor.phcolor,
                   values:
                       value
@@ -61,12 +77,9 @@ class DashboardPage extends StatelessWidget {
                           .reversed
                           .toList(), // Example TDS values
                   currentReading:
-                      value
-                          .map((data) => data.tds)
-                          .take(6)
-                          .toList()
-                          .reversed
-                          .last,
+                      predictionCubit is! GottenPrediction
+                          ? 0.0
+                          : (predictionCubit.prediction.tds),
                   parameterName: 'TDS',
                   subText: 'Total Dissolved Solids',
                   isHistogram: false,
@@ -86,12 +99,9 @@ class DashboardPage extends StatelessWidget {
                   parameterName: 'Turbidity',
                   subText: 'Water clarity level',
                   currentReading:
-                      value
-                          .map((data) => data.tub)
-                          .take(6)
-                          .toList()
-                          .reversed
-                          .last,
+                      predictionCubit is! GottenPrediction
+                          ? 0.0
+                          : (predictionCubit.prediction.tub),
                   isHistogram: false,
                   parameterSI: 'NTU',
                 ),
@@ -107,12 +117,9 @@ class DashboardPage extends StatelessWidget {
                           .reversed
                           .toList(), // Example TDS values
                   currentReading:
-                      value
-                          .map((data) => data.temp)
-                          .take(6)
-                          .toList()
-                          .reversed
-                          .last,
+                      predictionCubit is! GottenPrediction
+                          ? 0.0
+                          : (predictionCubit.prediction.temp),
                   parameterName: 'Temperature',
                   subText: 'Water temperature',
                   isHistogram: false,

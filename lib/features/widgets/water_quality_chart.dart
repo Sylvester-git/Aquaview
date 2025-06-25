@@ -41,6 +41,7 @@ class WaterQualityChart extends StatelessWidget {
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -62,35 +63,56 @@ class WaterQualityChart extends StatelessWidget {
               ),
               values.isEmpty
                   ? SizedBox()
-                  : Container(
-                    padding: EdgeInsets.all(5),
-                    decoration: BoxDecoration(
-                      color: linecolor.withOpacity(.5),
-                      borderRadius: BorderRadius.all(Radius.circular(10)),
-                    ),
-                    child: Text(
-                      '$currentReading $parameterSI',
-                      style: Theme.of(
-                        context,
-                      ).textTheme.titleLarge!.copyWith(fontSize: 16),
+                  : Text(
+                    '$currentReading $parameterSI',
+                    style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                      fontSize: 18,
+                      color: linecolor,
+                      fontWeight: FontWeight.w800,
                     ),
                   ),
             ],
           ),
           const SizedBox(height: 16),
-          SizedBox(
-            height: 200,
-            child:
-                values.isEmpty || dates.isEmpty
-                    ? Center(
-                      child: Text(
-                        'No available data',
-                        style: Theme.of(context).textTheme.titleLarge,
-                      ),
-                    )
-                    : isHistogram
-                    ? _buildHistogram()
-                    : _buildLineChart(context: context),
+          Column(
+            children: [
+              SizedBox(
+                height: 200,
+                child:
+                    values.isEmpty || dates.isEmpty
+                        ? Center(
+                          child: Text(
+                            'No available data today',
+                            style: Theme.of(context).textTheme.titleLarge,
+                          ),
+                        )
+                        : isHistogram
+                        ? _buildHistogram()
+                        : _buildLineChart(context: context),
+              ),
+              // SizedBox(height: 10),
+              // InkWell(
+              //   onTap: () {},
+              //   child: Row(
+              //     spacing: 10,
+              //     mainAxisAlignment: MainAxisAlignment.end,
+              //     children: [
+              //       Text(
+              //         'View all data',
+              //         style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+              //           fontSize: 12,
+              //           color: linecolor,
+              //         ),
+              //       ),
+              //       Icon(
+              //         Icons.arrow_forward_rounded,
+              //         color: linecolor,
+              //         size: 18,
+              //       ),
+              //     ],
+              //   ),
+              // ),
+            ],
           ),
         ],
       ),
