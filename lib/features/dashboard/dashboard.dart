@@ -97,10 +97,7 @@ class _DashboardPageState extends State<DashboardPage> {
                             ),
                           ),
                           onPressed: () async {
-                            await Future.wait([
-                              ApiCtrl.getPrediction(context: context),
-                              ApiCtrl.getSensorData(context: context),
-                            ]);
+                            getWQMSData();
                           },
                           child: Center(
                             child: Text(

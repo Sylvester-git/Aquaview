@@ -4,7 +4,7 @@ import 'package:waterapp/util/functions.dart';
 
 class AlertColumn extends StatelessWidget {
   const AlertColumn({super.key, required this.alert, required this.timestamp});
-  final Alerts alert;
+  final List<Alerts> alert;
   final String timestamp;
   @override
   Widget build(BuildContext context) {
@@ -27,11 +27,19 @@ class AlertColumn extends StatelessWidget {
           ),
         ),
 
-        _alertList(
-          alerts: alert.alerts.cast<String>(),
-          context: context,
-          timestamp: alert.timestamp,
-        ),
+        ...List.generate(alert.length, (index) {
+          return Column(
+            spacing: 10,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _alertList(
+                alerts: alert[index].alerts.cast<String>(),
+                context: context,
+                timestamp: alert[index].timestamp,
+              ),
+            ],
+          );
+        }),
       ],
     );
   }
@@ -45,10 +53,12 @@ class AlertColumn extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: List.generate(alerts.length, (index) {
         return Column(
+          spacing: 10,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               spacing: 10,
+              crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Expanded(
@@ -70,8 +80,7 @@ class AlertColumn extends StatelessWidget {
                 ),
               ],
             ),
-            if (index != alerts.length - 1)
-              const Divider(color: Colors.white24),
+            if (index != alert.length - 1) const Divider(color: Colors.white24),
           ],
         );
       }),

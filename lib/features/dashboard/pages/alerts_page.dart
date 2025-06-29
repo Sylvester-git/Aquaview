@@ -27,9 +27,8 @@ class AlertsPage extends StatelessWidget {
         }
         if (getAlertsstate is GottenAlerts) {
           final groupedAlerts = groupAlertsByDay(getAlertsstate.alerts);
-          final sortedKeys =
-              groupedAlerts.keys.toList()
-                ..sort((a, b) => b.compareTo(a)); // newest first
+          final sortedKeys = groupedAlerts.keys.toList();
+          // ..sort((a, b) => b.compareTo(a)); // newest first
           return getAlertsstate.alerts.isEmpty
               ? Center(
                 child: Text(
@@ -53,10 +52,7 @@ class AlertsPage extends StatelessWidget {
                     final date = sortedKeys[index];
                     final alertsForDate = groupedAlerts[date]!;
 
-                    return AlertColumn(
-                      alert: alertsForDate[index],
-                      timestamp: date,
-                    );
+                    return AlertColumn(alert: alertsForDate, timestamp: date);
                   },
                 ),
               );
