@@ -40,7 +40,7 @@ class _DashboardPageState extends State<DashboardPage> {
   }
 
   void refreshWQMSData() {
-    timer = Timer.periodic(const Duration(minutes: 2), (timer) async {
+    timer = Timer.periodic(const Duration(minutes: 1), (timer) async {
       await Future.wait([
         ApiCtrl.refreshSensorData(context: context),
         ApiCtrl.refreshAlerts(context: context),

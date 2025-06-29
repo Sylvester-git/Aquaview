@@ -44,7 +44,7 @@ List<String> getDates({required List<String> timestamps}) {
 String convertTimestamp({required String timestamps}) {
   final DateFormat dateFormat = DateFormat().add_jm();
   final DateTime datatime = DateTime.parse(timestamps);
-  return dateFormat.format(datatime.add(Duration(hours: 1)));
+  return dateFormat.format(datatime);
 }
 
 Map<String, List<WQMSModel>> groupWQMSByDay(List<WQMSModel> items) {

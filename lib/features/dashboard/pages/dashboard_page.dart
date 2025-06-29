@@ -23,8 +23,10 @@ class DashboardPage extends StatelessWidget {
                 (getSensorstate as GottenSensorData).sensorData
                     .where(
                       (data) =>
-                          ((data.timestamp.convertToDateTime().day == 28) &&
-                              data.timestamp.convertToDateTime().month == 6),
+                          ((data.timestamp.convertToDateTime().day ==
+                                  DateTime.now().day) &&
+                              data.timestamp.convertToDateTime().month ==
+                                  DateTime.now().month),
                     )
                     .take(6)
                     .toList();
@@ -33,10 +35,13 @@ class DashboardPage extends StatelessWidget {
                   value
                       .where(
                         (data) =>
-                            ((data.timestamp.convertToDateTime().day == 28) &&
-                                data.timestamp.convertToDateTime().month == 6),
+                            ((data.timestamp.convertToDateTime().day ==
+                                    DateTime.now().day) &&
+                                data.timestamp.convertToDateTime().month ==
+                                    DateTime.now().month),
                       )
                       .map((data) => data.timestamp)
+                      .take(6)
                       .toList(),
             );
             return Column(
