@@ -15,7 +15,7 @@ class WaterParameterDataPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final groupedItems = groupByDay(
+    final groupedItems = groupWQMSByDay(
       waterparametrModel,
     ); // 'items' is your raw list
     final groupedKeys =

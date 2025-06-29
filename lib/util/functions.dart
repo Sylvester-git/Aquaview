@@ -1,6 +1,8 @@
 import 'package:intl/intl.dart';
 import 'package:waterapp/features/model/wqms.dart';
 
+import '../features/model/alerts.dart';
+
 List<int> generateSteps(double minValue, double maxValue, {int steps = 10}) {
   if (minValue > maxValue) {
     double temp = minValue;
@@ -40,12 +42,12 @@ List<String> getDates({required List<String> timestamps}) {
 }
 
 String convertTimestamp({required String timestamps}) {
-  final DateFormat dateFormat = DateFormat('MMMM d,').add_jm();
+  final DateFormat dateFormat = DateFormat().add_jm();
   final DateTime datatime = DateTime.parse(timestamps);
   return dateFormat.format(datatime);
 }
 
-Map<String, List<WQMSModel>> groupByDay(List<WQMSModel> items) {
+Map<String, List<WQMSModel>> groupWQMSByDay(List<WQMSModel> items) {
   final Map<String, List<WQMSModel>> grouped = {};
 
   for (final item in items) {
@@ -57,6 +59,24 @@ Map<String, List<WQMSModel>> groupByDay(List<WQMSModel> items) {
       grouped[key] = [];
     }
     grouped[key]!.add(item);
+  }
+
+  return grouped;
+}
+
+Map<String, List<Alerts>> groupAlertsByDay(List<Alerts> alertsList) {
+  final Map<String, List<Alerts>> grouped = {};
+
+  for (var alert in alertsList) {
+    // Parse timestamp into DateTime
+    final date = DateTime.parse(alert.timestamp);
+
+    // Format date as "yyyy-MM-dd" to group by day
+    final dayKey = DateFormat('MMMM d').format(date);
+
+    // Add alert to the correct group
+    grouped.putIfAbsent(dayKey, () => []);
+    grouped[dayKey]!.add(alert);
   }
 
   return grouped;

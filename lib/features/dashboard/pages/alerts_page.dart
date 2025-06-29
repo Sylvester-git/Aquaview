@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:waterapp/features/cubit/get_alerts/get_alerts_cubit.dart';
 import 'package:waterapp/features/widgets/alert_colum.dart';
+import 'package:waterapp/util/functions.dart';
 
 class AlertsPage extends StatelessWidget {
   const AlertsPage({super.key});
@@ -25,6 +26,10 @@ class AlertsPage extends StatelessWidget {
           );
         }
         if (getAlertsstate is GottenAlerts) {
+          final groupedAlerts = groupAlertsByDay(getAlertsstate.alerts);
+          final sortedKeys =
+              groupedAlerts.keys.toList()
+                ..sort((a, b) => b.compareTo(a)); // newest first
           return getAlertsstate.alerts.isEmpty
               ? Center(
                 child: Text(
@@ -43,9 +48,15 @@ class AlertsPage extends StatelessWidget {
                     left: 16,
                     right: 16,
                   ),
-                  itemCount: getAlertsstate.alerts.length,
+                  itemCount: sortedKeys.length,
                   itemBuilder: (context, index) {
-                    return AlertColumn(alert: getAlertsstate.alerts[index]);
+                    final date = sortedKeys[index];
+                    final alertsForDate = groupedAlerts[date]!;
+
+                    return AlertColumn(
+                      alert: alertsForDate[index],
+                      timestamp: date,
+                    );
                   },
                 ),
               );

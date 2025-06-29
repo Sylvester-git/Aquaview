@@ -3,9 +3,9 @@ import 'package:waterapp/features/model/alerts.dart';
 import 'package:waterapp/util/functions.dart';
 
 class AlertColumn extends StatelessWidget {
-  const AlertColumn({super.key, required this.alert});
+  const AlertColumn({super.key, required this.alert, required this.timestamp});
   final Alerts alert;
-
+  final String timestamp;
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -20,14 +20,18 @@ class AlertColumn extends StatelessWidget {
             borderRadius: BorderRadius.all(Radius.circular(10)),
           ),
           child: Text(
-            convertTimestamp(timestamps: alert.timestamp),
+            timestamp,
             style: Theme.of(
               context,
             ).textTheme.bodyMedium!.copyWith(fontSize: 14),
           ),
         ),
 
-        _alertList(alerts: alert.alerts.cast<String>(), context: context),
+        _alertList(
+          alerts: alert.alerts.cast<String>(),
+          context: context,
+          timestamp: alert.timestamp,
+        ),
       ],
     );
   }
@@ -35,6 +39,7 @@ class AlertColumn extends StatelessWidget {
   Widget _alertList({
     required List<String> alerts,
     required BuildContext context,
+    required String timestamp,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -42,12 +47,28 @@ class AlertColumn extends StatelessWidget {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              alerts[index],
-              style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                fontSize: 14,
-                color: Colors.white70,
-              ),
+            Row(
+              spacing: 10,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: Text(
+                    alerts[index],
+                    textAlign: TextAlign.left,
+                    style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                      fontSize: 14,
+                      color: Colors.white70,
+                    ),
+                  ),
+                ),
+                Text(
+                  convertTimestamp(timestamps: timestamp),
+                  style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                    fontSize: 14,
+                    color: Colors.white70,
+                  ),
+                ),
+              ],
             ),
             if (index != alerts.length - 1)
               const Divider(color: Colors.white24),
