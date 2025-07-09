@@ -24,7 +24,7 @@ List<String> getDates({required List<String> timestamps}) {
   final DateFormat formatter = DateFormat().add_jm();
   final List<MapEntry<DateTime, String>> dateTimePairs =
       timestamps.map((timestamp) {
-        DateTime dateTime = DateTime.parse(timestamp);
+        DateTime dateTime = DateTime.parse(timestamp).add(Duration(hours: 1));
         String formattedDate = formatter.format(dateTime);
         return MapEntry(dateTime, formattedDate);
       }).toList();
@@ -43,7 +43,7 @@ List<String> getDates({required List<String> timestamps}) {
 
 String convertTimestamp({required String timestamps}) {
   final DateFormat dateFormat = DateFormat().add_jm();
-  final DateTime datatime = DateTime.parse(timestamps);
+  final DateTime datatime = DateTime.parse(timestamps).add(Duration(hours: 1));
   return dateFormat.format(datatime);
 }
 
@@ -51,7 +51,7 @@ Map<String, List<WQMSModel>> groupWQMSByDay(List<WQMSModel> items) {
   final Map<String, List<WQMSModel>> grouped = {};
 
   for (final item in items) {
-    final date = DateTime.parse(item.timestamp);
+    final date = DateTime.parse(item.timestamp).add(Duration(hours: 1));
     final key =
         "${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}";
 
@@ -69,7 +69,7 @@ Map<String, List<Alerts>> groupAlertsByDay(List<Alerts> alertsList) {
 
   for (var alert in alertsList) {
     // Parse timestamp into DateTime
-    final date = DateTime.parse(alert.timestamp);
+    final date = DateTime.parse(alert.timestamp).add(Duration(hours: 1));
 
     // Format date as "yyyy-MM-dd" to group by day
     final dayKey = DateFormat('MMMM d').format(date);
