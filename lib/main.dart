@@ -8,7 +8,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:waterapp/app/app.dart';
 import 'package:waterapp/app/bloc_obserever.dart';
-import 'package:waterapp/app/error_screen.dart';
 import 'package:waterapp/app/init.dart';
 import 'package:waterapp/config/config.dart';
 import 'package:waterapp/config/firebase_config.dart';
