@@ -12,6 +12,7 @@ import 'package:waterapp/app/init.dart';
 import 'package:waterapp/config/config.dart';
 import 'package:waterapp/config/firebase_config.dart';
 
+
 void main() async {
   runZonedGuarded(
     () async {
