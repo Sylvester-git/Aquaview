@@ -1,6 +1,6 @@
 {
-    "name": "waterapp",
-    "short_name": "waterapp",
+    "name": "Aquaview",
+    "short_name": "Aquaview",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
